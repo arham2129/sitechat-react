@@ -91,6 +91,14 @@ describe('mock client', () => {
     ]);
   });
 
+  it('fails only the configured number of chat requests, so Retry can recover', async () => {
+    const client = createMockClient({ tickMs: 0, tokenMs: 0, chatFailures: 1 });
+    const jobId = await client.startCrawl('https://aibitsoft.com', 20);
+    await expect(collect(client.ask('Do you build mobile apps?', jobId))).rejects.toThrow('Could not reach');
+    const events = await collect(client.ask('Do you build mobile apps?', jobId));
+    expect(events.at(-1)).toEqual({ type: 'done' });
+  });
+
   it('reports an error for sites outside the demo data', async () => {
     const { client, jobId } = await crawledClient('https://example.com');
     expect(await client.getCrawlStatus(jobId)).toMatchObject({ status: 'error' });

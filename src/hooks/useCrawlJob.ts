@@ -10,12 +10,13 @@ export type CrawlPhase = 'idle' | 'starting' | 'running' | 'done' | 'cancelled' 
 export interface CrawlJob {
   phase: CrawlPhase;
   url: string | null;
+  budget: CrawlBudget | null;
   jobId: string | null;
   status: CrawlStatus | null;
   error: string | null;
 }
 
-const IDLE: CrawlJob = { phase: 'idle', url: null, jobId: null, status: null, error: null };
+const IDLE: CrawlJob = { phase: 'idle', url: null, budget: null, jobId: null, status: null, error: null };
 
 function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : 'Something went wrong';
@@ -39,7 +40,7 @@ export function useCrawlJob(client: SiteChatClient, { pollIntervalMs = POLL_INTE
       const controller = new AbortController();
       controllerRef.current = controller;
       const { signal } = controller;
-      setJob({ ...IDLE, phase: 'starting', url });
+      setJob({ ...IDLE, phase: 'starting', url, budget });
       try {
         const jobId = await client.startCrawl(url, budget, signal);
         setJob((prev) => ({ ...prev, phase: 'running', jobId }));
@@ -78,7 +79,8 @@ export function useCrawlJob(client: SiteChatClient, { pollIntervalMs = POLL_INTE
 
   const reset = useCallback(() => {
     stopPolling();
-    setJob(IDLE);
+    // Keep the last address and budget so the form reopens ready to edit, not blank.
+    setJob((prev) => ({ ...IDLE, url: prev.url, budget: prev.budget }));
   }, [stopPolling]);
 
   return { job, start, cancel, reset };

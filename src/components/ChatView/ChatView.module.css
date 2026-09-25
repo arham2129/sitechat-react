@@ -1,0 +1,65 @@
+.chat {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper);
+}
+
+.scroll {
+  flex: 1;
+  padding-bottom: var(--space-4);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 44ch;
+  margin: 0 auto;
+  padding: var(--space-7) 0;
+  text-align: center;
+}
+
+.emptyTitle {
+  margin: 0;
+  font-size: var(--text-xl);
+  line-height: var(--leading-xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.015em;
+}
+
+.emptyText {
+  margin: 0;
+  color: var(--color-slate);
+  font-size: var(--text-md);
+  line-height: var(--leading-md);
+}
+
+@media (max-width: 47.99rem) {
+  /* The page scrolls on phones; the composer stays pinned above the keyboard. */
+  .chat {
+    flex: 1;
+  }
+
+  .chat > form {
+    position: sticky;
+    bottom: 0;
+    padding-bottom: var(--space-2);
+  }
+}
+
+@media (min-width: 48rem) {
+  .chat {
+    height: 100%;
+    padding: var(--space-5) var(--space-5) var(--space-4);
+  }
+
+  /* On tablets and up only the conversation scrolls, so the composer never moves. */
+  .scroll {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}

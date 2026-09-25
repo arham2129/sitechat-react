@@ -1,0 +1,96 @@
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.host {
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: var(--leading-md);
+  font-weight: var(--weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-sm);
+}
+
+.ready {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-green-ink);
+  font-weight: var(--weight-semibold);
+}
+
+/* A semantic status marker (crawl is ready), not decoration; paired with the word "Ready". */
+.readyDot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-aibit-green);
+}
+
+.count {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-slate);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-sm);
+  color: var(--color-slate);
+}
+
+.action {
+  align-self: flex-start;
+}
+
+@media (max-width: 47.99rem) {
+  /* Only rendered once the crawl is done, which is when the panel collapses to a bar. */
+  .summary {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .info {
+    flex: 1;
+  }
+
+  /* A very long host gives way first; the status line and the button never truncate. */
+  .host {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+
+  .meta,
+  .action {
+    flex: none;
+  }
+
+  .action {
+    align-self: center;
+  }
+
+  .hint {
+    display: none;
+  }
+}

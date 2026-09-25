@@ -1,0 +1,58 @@
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: var(--leading-md);
+}
+
+.host {
+  font-weight: var(--weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.track {
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--color-line);
+}
+
+.fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  background: var(--color-aibit-green);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-sm);
+}
+
+/* The page count must never truncate or wrap at any width (DESIGN.md, crawl progress). */
+.count {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+}
+
+.currentUrl {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-slate);
+}
+
+.cancel {
+  align-self: flex-start;
+}

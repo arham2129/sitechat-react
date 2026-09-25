@@ -1,0 +1,68 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.header {
+  flex: none;
+  height: var(--header-height);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-paper);
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+.wordmark {
+  margin: 0;
+  font-size: var(--text-xl);
+  line-height: var(--leading-xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.015em;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+@media (min-width: 48rem) {
+  .headerInner {
+    padding: 0 var(--space-5);
+  }
+
+  /* Two panes that fill the viewport; each pane scrolls on its own instead of the page. */
+  .main {
+    display: grid;
+    grid-template-columns: var(--crawl-pane-width) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-5);
+    height: calc(100dvh - var(--header-height));
+    padding: var(--space-5);
+  }
+
+  .main > :last-child {
+    align-self: stretch;
+    min-height: 0;
+  }
+}
+
+@media (min-width: 80rem) {
+  .main {
+    gap: var(--space-6);
+  }
+}

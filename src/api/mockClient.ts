@@ -9,8 +9,11 @@ export interface MockOptions {
   tickMs?: number;
   /** Milliseconds per streamed token (~25 ms reads like a live model). */
   tokenMs?: number;
-  /** Fail every chat request, to show the network-error state without a network. */
-  failChat?: boolean;
+  /**
+   * Fail this many chat requests before succeeding, to show the network-error state
+   * and a working Retry without a network.
+   */
+  chatFailures?: number;
 }
 
 interface Job {
@@ -24,7 +27,8 @@ const DEMO_HOST = 'aibitsoft.com';
 const REFUSAL_REASON = "I couldn't find an answer to that on the crawled pages.";
 
 export function createMockClient(options: MockOptions = {}): SiteChatClient {
-  const { tickMs = 150, tokenMs = 25, failChat = false } = options;
+  const { tickMs = 150, tokenMs = 25 } = options;
+  let chatFailures = options.chatFailures ?? 0;
   const jobs = new Map<string, Job>();
   let nextId = 1;
 
@@ -85,7 +89,10 @@ export function createMockClient(options: MockOptions = {}): SiteChatClient {
       const status = statusOf(getJob(jobId));
       if (status.status !== 'done') throw new ApiError('Crawl is not finished', 409);
       await abortableSleep(400, signal);
-      if (failChat) throw new ApiError('Could not reach the SiteChat server');
+      if (chatFailures > 0) {
+        chatFailures -= 1;
+        throw new ApiError('Could not reach the SiteChat server');
+      }
 
       const result = answerQuestion(question, site.pages.slice(0, status.pages_crawled));
       if (result.kind === 'refused') {

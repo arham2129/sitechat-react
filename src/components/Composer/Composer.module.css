@@ -1,0 +1,53 @@
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-line);
+  background: var(--color-paper);
+}
+
+.row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.input {
+  flex: 1;
+  min-height: var(--control-height);
+  max-height: calc(var(--leading-md) * 6 + var(--space-2) * 2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-control-border);
+  border-radius: var(--radius-md);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: var(--text-md);
+  line-height: var(--leading-md);
+  resize: none;
+  /* Grows with its content up to max-height; browsers without support keep one row and scroll. */
+  field-sizing: content;
+}
+
+.input::placeholder {
+  color: var(--color-slate);
+}
+
+.input:disabled {
+  background: var(--color-canvas);
+  cursor: not-allowed;
+}
+
+.hint {
+  margin: 0;
+  color: var(--color-slate);
+  font-size: var(--text-xs);
+  line-height: var(--leading-xs);
+}
+
+@media (max-width: 47.99rem) {
+  .input {
+    min-height: var(--touch-target);
+  }
+}
