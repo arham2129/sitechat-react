@@ -1,0 +1,82 @@
+/* Values and roles are specified in docs/DESIGN.md; change them there first. */
+:root {
+  color-scheme: light;
+
+  --color-ink: #1e293b;
+  --color-slate: #475569;
+  --color-canvas: #f9fafb;
+  --color-paper: #ffffff;
+  --color-aibit-blue: #0a5797;
+  /* 2.8:1 on paper: graphics only, never text. */
+  --color-aibit-green: #49b04f;
+
+  --color-line: #e2e8f0;
+  /* Darker than --color-line because control boundaries need 3:1 (WCAG 1.4.11). */
+  --color-control-border: #64748b;
+  --color-blue-tint: #eaf1f8;
+  --color-green-ink: #2f7a34;
+  --color-danger: #b42318;
+  --color-danger-tint: #fef3f2;
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+
+  --text-xs: 0.75rem;
+  --leading-xs: 1rem;
+  --text-sm: 0.875rem;
+  --leading-sm: 1.25rem;
+  /* 16px inputs stop iOS Safari zooming the page on focus. */
+  --text-md: 1rem;
+  --leading-md: 1.5rem;
+  --text-lg: 1.125rem;
+  --leading-lg: 1.625rem;
+  --text-xl: 1.375rem;
+  --leading-xl: 1.75rem;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --control-height: 2.5rem;
+  --touch-target: 2.75rem;
+  --header-height: 3.5rem;
+  --crawl-pane-width: 20rem;
+  --container-max: 80rem;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+
+  /* Only for the sticky summary bar at 360px, where it separates the bar from scrolling content. */
+  --shadow-sticky: 0 1px 2px rgb(30 41 59 / 0.08);
+
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+
+  --focus-ring: 2px solid var(--color-aibit-blue);
+  --focus-offset: 2px;
+}
+
+@media (min-width: 80rem) {
+  :root {
+    --crawl-pane-width: 22.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+  }
+}

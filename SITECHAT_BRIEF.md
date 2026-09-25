@@ -160,6 +160,7 @@ docs/         DESIGN.md DECISIONS.md audit.md screenshots/ brand-capture/
 
 ### Phase 2 — Design system (skill: `design-taste-frontend`)
 
+- Derive DESIGN.md from AiBit's own site; no Stripe, Linear, or Vercel clones.
 - Write `docs/DESIGN.md` for SiteChat, derived from the Phase 1 capture:
   - 4–6 named colour tokens (AiBit's blue and green as accents, not everywhere);
   - type scale;
