@@ -2,7 +2,8 @@
 import { describe, expect, it } from 'vitest';
 import site from '../mocks/site.json';
 import { createMockClient } from './mockClient';
-import { answerQuestion, queryTerms, REFUSAL_THRESHOLD, scorePage, splitSentences } from './mockSearch';
+import { analyzeQuery, answerQuestion, REFUSAL_THRESHOLD, scorePage } from './mockSearch';
+import { splitSentences } from './mockText';
 import type { ChatEvent } from './types';
 
 async function crawledClient(url = 'https://aibitsoft.com') {
@@ -18,8 +19,8 @@ async function collect(events: AsyncIterable<ChatEvent>): Promise<ChatEvent[]> {
 }
 
 function bestScore(question: string): number {
-  const terms = queryTerms(question);
-  return Math.max(...site.pages.map((page) => scorePage(terms, page)));
+  const query = analyzeQuery(question, site.pages);
+  return Math.max(...site.pages.map((page) => scorePage(query, page)));
 }
 
 describe('mock search refusal threshold', () => {
@@ -38,6 +39,23 @@ describe('mock search refusal threshold', () => {
   it('answers an FAQ question with the answer that follows it on the page', () => {
     const result = answerQuestion('How soon can we meet?', site.pages);
     expect(result).toMatchObject({ kind: 'answer', text: expect.stringMatching(/^Typically within/) });
+  });
+
+  it('refuses a one-word question matched only in unrelated body text', () => {
+    // "office" appears once, in a careers blurb about office perks, not a location.
+    expect(answerQuestion('Where is your office?', site.pages)).toEqual({ kind: 'refused' });
+    expect(answerQuestion('How much does it cost?', site.pages)).toEqual({ kind: 'refused' });
+  });
+
+  it('answers a one-word question about a named technology', () => {
+    const result = answerQuestion('Do you use React?', site.pages);
+    expect(result).toMatchObject({ kind: 'answer', text: expect.stringContaining('React') });
+  });
+
+  it('ignores words that appear on every page when scoring', () => {
+    // "development" is everywhere; "react" is on one page and decides the match.
+    const result = answerQuestion('Do you do React development?', site.pages);
+    expect(result.kind === 'answer' && result.sources[0]?.title).toBe('IT Staff Augmentation');
   });
 
   it('refuses when no pages were crawled', () => {

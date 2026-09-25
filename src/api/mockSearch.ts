@@ -1,3 +1,4 @@
+import { isAnswer, isProse, namedTerms, queryTerms, splitSentences, tokenize } from './mockText';
 import type { Source } from './types';
 
 export interface SitePage {
@@ -10,69 +11,53 @@ export type MockAnswer =
   | { kind: 'answer'; text: string; sources: Source[] }
   | { kind: 'refused' };
 
-// Share of the question's terms the best page must contain. Below this the mock
-// refuses instead of guessing, mirroring the real backend's refusal behaviour.
+// Share of the question's (rarity-weighted) terms the best page must contain. Below
+// this the mock refuses instead of guessing, mirroring the real backend's refusal.
 export const REFUSAL_THRESHOLD = 0.75;
+const SINGLE_KEYWORD_WEIGHT = 0.5;
 const MAX_SOURCES = 3;
 const MAX_SENTENCES = 3;
 
-const STOPWORDS = new Set(
-  ('a an and are as at be but by can do does for from has have how i if in into is it its ' +
-    'me much my of on or our so tell than that the their them there they this to us was we ' +
-    'what when where which who why will with you your about any all also offer provide')
-    .split(' '),
-);
-
-function stem(word: string): string {
-  // Naive plural folding so "apps" matches "app"; good enough for keyword overlap.
-  return word.length > 3 && word.endsWith('s') && !word.endsWith('ss') ? word.slice(0, -1) : word;
+function titleHits(terms: string[], page: SitePage): number {
+  const words = new Set(tokenize(page.title));
+  return terms.filter((term) => words.has(term)).length;
 }
 
-export function tokenize(text: string): string[] {
-  return (text.toLowerCase().match(/[a-z0-9]+/g) ?? []).map(stem);
+export interface Query {
+  terms: string[];
+  /** Inverse document frequency per term across the crawled pages. */
+  weights: Map<string, number>;
+  named: Set<string>;
 }
 
-export function queryTerms(question: string): string[] {
-  return [...new Set(tokenize(question).filter((word) => !STOPWORDS.has(word)))];
+export function analyzeQuery(question: string, pages: SitePage[]): Query {
+  const terms = queryTerms(question);
+  // A word on every page ("development") says nothing about which page answers, so it
+  // weighs 0; a word on one page ("react") weighs the most.
+  const pageWords = pages.map((page) => new Set(tokenize(`${page.title} ${page.text}`)));
+  const weights = new Map(
+    terms.map((term) => {
+      const pagesWithTerm = pageWords.filter((set) => set.has(term)).length;
+      return [term, Math.log((pages.length + 1) / (pagesWithTerm + 1))];
+    }),
+  );
+  return { terms, weights, named: namedTerms(question) };
 }
 
-function joinWrappedLines(text: string): string[] {
-  // The capture keeps one line per rendered block. A line that starts lowercase after a
-  // line with no end punctuation is the same sentence wrapped across inline elements.
-  const blocks: string[] = [];
-  for (const line of text.split('\n')) {
-    const previous = blocks.at(-1);
-    if (previous !== undefined && !/[.!?:]$/.test(previous) && /^[a-z]/.test(line)) {
-      blocks[blocks.length - 1] = `${previous} ${line}`;
-    } else {
-      blocks.push(line);
-    }
-  }
-  return blocks;
-}
-
-export function splitSentences(text: string): string[] {
-  // Some site text lacks a space after a full stop ("growth.Every"), so split on
-  // terminal punctuation followed by a capital, with or without a space.
-  return joinWrappedLines(text)
-    .flatMap((block) => block.split(/(?<=[.!?])\s*(?=[A-Z0-9])/))
-    .map((sentence) => sentence.trim())
-    .filter(Boolean);
-}
-
-function isProse(sentence: string): boolean {
-  // Buttons and headings ("Learn More", "OUR SERVICES") have no end punctuation.
-  return /[.!?]$/.test(sentence) && sentence.split(' ').length >= 4;
-}
-
-export function scorePage(terms: string[], page: SitePage): number {
+export function scorePage({ terms, weights, named }: Query, page: SitePage): number {
   if (terms.length === 0) return 0;
   const words = new Set(tokenize(`${page.title} ${page.text}`));
-  return terms.filter((term) => words.has(term)).length / terms.length;
-}
-
-function isAnswer(sentence: string | undefined): sentence is string {
-  return sentence !== undefined && /[.!]$/.test(sentence);
+  const matched = terms.filter((term) => words.has(term));
+  const weightOf = (list: string[]) => list.reduce((sum, term) => sum + (weights.get(term) ?? 0), 0);
+  const total = weightOf(terms);
+  // When every term is on every page, weights are all 0; fall back to plain overlap.
+  const coverage = total > 0 ? weightOf(matched) / total : matched.length / terms.length;
+  // A one-word question matched only in body text is weak evidence: "Where is your
+  // office?" would otherwise match a careers blurb about office perks. A named thing
+  // ("Do you do React?") is specific enough to count in full.
+  const [only] = terms;
+  const weak = terms.length === 1 && only !== undefined && !named.has(only) && titleHits(terms, page) === 0;
+  return weak ? coverage * SINGLE_KEYWORD_WEIGHT : coverage;
 }
 
 function pickSentences(terms: string[], page: SitePage): string {
@@ -100,15 +85,11 @@ function pickSentences(terms: string[], page: SitePage): string {
     .join(' ');
 }
 
-function titleHits(terms: string[], page: SitePage): number {
-  const words = new Set(tokenize(page.title));
-  return terms.filter((term) => words.has(term)).length;
-}
-
 export function answerQuestion(question: string, pages: SitePage[]): MockAnswer {
-  const terms = queryTerms(question);
+  const query = analyzeQuery(question, pages);
+  const { terms } = query;
   const ranked = pages
-    .map((page) => ({ page, score: scorePage(terms, page), inTitle: titleHits(terms, page) }))
+    .map((page) => ({ page, score: scorePage(query, page), inTitle: titleHits(terms, page) }))
     .filter((entry) => entry.score > 0)
     // Ties go to the page whose title names the topic, so "MVP development" answers
     // from the MVP page rather than the homepage that merely links to it.

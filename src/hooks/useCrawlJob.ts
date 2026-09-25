@@ -21,7 +21,7 @@ function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : 'Something went wrong';
 }
 
-export function useCrawlJob(client: SiteChatClient) {
+export function useCrawlJob(client: SiteChatClient, { pollIntervalMs = POLL_INTERVAL_MS } = {}) {
   const [job, setJob] = useState<CrawlJob>(IDLE);
   const controllerRef = useRef<AbortController | null>(null);
 
@@ -47,7 +47,7 @@ export function useCrawlJob(client: SiteChatClient) {
           const status = await client.getCrawlStatus(jobId, signal);
           setJob((prev) => ({ ...prev, phase: status.status, status, error: status.error ?? null }));
           if (status.status !== 'running') break;
-          await abortableSleep(POLL_INTERVAL_MS, signal);
+          await abortableSleep(pollIntervalMs, signal);
         }
       } catch (error) {
         // An abort is a deliberate cancel, reset or unmount, not a failure to report.
@@ -57,7 +57,7 @@ export function useCrawlJob(client: SiteChatClient) {
         if (controllerRef.current === controller) controllerRef.current = null;
       }
     },
-    [client, stopPolling],
+    [client, pollIntervalMs, stopPolling],
   );
 
   const cancel = useCallback(async () => {
