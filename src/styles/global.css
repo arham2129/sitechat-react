@@ -1,11 +1,12 @@
 /* Self-hosted so the offline demo renders in Inter, not a fallback (DESIGN.md, Typography).
-   Served from public/ at a fixed path so index.html can preload it. */
+   Not preloaded: on repeat visits Chrome serves the font from memory cache and warns that
+   the preload went unused, and this render-blocking stylesheet already requests it early. */
 @font-face {
   font-family: 'Inter';
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: url('/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+  src: url('/fonts/inter-latin-wght-normal.woff2') format('woff2');
 }
 
 *,

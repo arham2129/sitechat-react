@@ -49,9 +49,15 @@
   .main {
     display: grid;
     grid-template-columns: var(--crawl-pane-width) minmax(0, 1fr);
+    /* An auto row would grow with the conversation and push the composer off-screen. */
+    grid-template-rows: minmax(0, 1fr);
     align-items: start;
     gap: var(--space-5);
+    /* flex: none so this height wins: with flex: 1 the basis resolves to the content size
+       and a long conversation stretched the page past the viewport. */
+    flex: none;
     height: calc(100dvh - var(--header-height));
+    min-height: 0;
     padding: var(--space-5);
   }
 

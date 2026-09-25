@@ -31,7 +31,6 @@ Format: `file:line — rule — fix | justification`. **Fix** means changed in t
 - `src/components/CrawlPanel/CrawlPanel.module.css:37` — Flex children need `min-width: 0` — **Fix:** added to the error text.
 - `src/components/CrawlPanel/CrawlPanel.module.css:51`, `src/components/ChatView/ChatView.module.css:48` — Sticky elements must not cover the focused element — **Fix:** `scroll-padding-top: 5rem; scroll-padding-bottom: 8rem` on `html` below 48rem (`global.css`).
 - `src/styles/global.css:32` — `touch-action: manipulation`; set `-webkit-tap-highlight-color` intentionally — **Fix:** both added (the tap highlight is a 12% tint of `aibit-blue`).
-- `src/styles/global.css:2` — Preload critical fonts — **Fix:** the font moved to `public/fonts/` for a stable URL, preloaded in `index.html` with `crossorigin`.
 - `src/App.tsx:20`, `src/components/CrawlPanel/CrawlSummary.tsx:19`, `src/components/CrawlPanel/CrawlProgress.tsx:20`, `src/components/CrawlPanel/CrawlProgress.tsx:38`, `src/components/SourceList/SourceList.tsx:27`, `src/components/RefusalNotice/RefusalNotice.tsx:30` — Brand names and identifiers need `translate="no"` — **Fix:** added to the wordmark, host names, URLs, email and phone.
 
 ## Justified
@@ -45,6 +44,7 @@ Format: `file:line — rule — fix | justification`. **Fix** means changed in t
 - `src/components/MessageList/MessageList.tsx:19` — Virtualize lists over 50 items — **Justified:** a demo conversation is well under 50 messages. Virtualizing would complicate `aria-live` and auto-scroll for no measurable gain; revisit if sessions grow.
 - `src/components/CrawlPanel/CrawlForm.tsx:54` and all buttons and headings — Title Case (Chicago) — **Justified:** DESIGN.md sets sentence case everywhere for a calm tool voice. It is applied consistently.
 - `src/components/CrawlPanel/CrawlProgress.tsx:35` — Numbers via `Intl.NumberFormat` — **Justified:** page counts are at most 120, so there are no separators to localise, and i18n is out of scope in the brief.
+- `src/styles/global.css:2` — Preload critical fonts — **Justified (reverted in Phase 6):** a preload was added in Phase 5, but Phase 6's console check showed Chrome warning "preloaded but not used" on every repeat load, because the font then comes from memory cache. The font is same-origin and 48 KB, and the render-blocking stylesheet requests it immediately, so the preload bought almost nothing and broke the zero-warnings requirement. The font stays in `public/fonts/`.
 - `index.html:7` — `theme-color` matches the page background — **Justified:** `#ffffff` matches the header, which is the surface adjacent to the browser chrome. The canvas below it is `#F9FAFB`.
 - `index.html:5` — Full-bleed layouts need `env(safe-area-inset-*)` — **Justified:** the viewport has no `viewport-fit=cover`, so browsers keep content inside the safe area themselves.
 - `src/components/Message/Message.tsx:52` — Specific button labels — **Justified:** "Retry" is the label the brief specifies. It sits inside the error block, so its object is unambiguous.
