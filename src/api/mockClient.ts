@@ -53,6 +53,7 @@ export function createMockClient(options: MockOptions = {}): SiteChatClient {
       pages_crawled: crawled,
       max_pages: job.maxPages,
       current_url: status === 'running' ? site.pages[crawled]?.url : undefined,
+      pages: site.pages.slice(0, crawled).map(({ title, url }) => ({ title, url })),
     };
   };
 

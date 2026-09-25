@@ -6,11 +6,11 @@ This repository is the React frontend. The backend (Python FastAPI: crawler, hyb
 
 ![Answer with sources, 1280 px](docs/screenshots/answer-sources-1280.png)
 
-| Phone (360 px) | Refusal | Network error with Retry |
+| Ready, with suggested questions | Phone (360 px) | Network error with Retry |
 |---|---|---|
-| ![Answer with sources at 360 px, crawl panel collapsed to a sticky bar](docs/screenshots/answer-sources-360.png) | ![Refusal with contact links at 768 px](docs/screenshots/refusal-768.png) | ![Network error with a Retry button at 768 px](docs/screenshots/error-768.png) |
+| ![Ready state at 768 px: crawled pages in the sidebar, suggested questions in the chat](docs/screenshots/ready-768.png) | ![Answer with sources at 360 px, site summary pinned at the top](docs/screenshots/answer-sources-360.png) | ![Network error with a Retry button at 768 px](docs/screenshots/error-768.png) |
 
-All 15 states at three widths are in [`docs/screenshots/`](docs/screenshots/), indexed in [`docs/verification.md`](docs/verification.md).
+All 6 states at three widths (18 captures) are in [`docs/screenshots/`](docs/screenshots/), indexed in [`docs/verification.md`](docs/verification.md).
 
 ## Run it
 
@@ -32,7 +32,7 @@ Any value other than `http` falls back to mock, so a typo can never point a demo
 |---|---|
 | `npm run build` | Type-check (strict) and build to `dist/` |
 | `npm run lint` | ESLint with `typescript-eslint` and `react-hooks` |
-| `npm test` | Vitest: 52 unit and component tests |
+| `npm test` | Vitest: 55 unit and component tests |
 | `npm run test:e2e` | Playwright happy path against the production build (run `npx playwright install chromium` once) |
 
 ## Architecture
@@ -40,8 +40,8 @@ Any value other than `http` falls back to mock, so a typo can never point a demo
 ```mermaid
 flowchart LR
   subgraph UI["Components (presentational)"]
-    CP[CrawlPanel<br/>form, progress, summary]
-    CV[ChatView<br/>MessageList, Message,<br/>SourceList, RefusalNotice, Composer]
+    CP[Sidebar: CrawlPanel,<br/>PageList]
+    CV[ChatView: MessageList, Message,<br/>SourceList, RefusalNotice,<br/>SuggestedQuestions, Composer]
   end
   subgraph State["Hooks (state and effects)"]
     CJ[useCrawlJob<br/>poll every 1 s, cancel, undo]
@@ -66,6 +66,7 @@ flowchart LR
 
 - **Components only render.** State and effects live in hooks: `useCrawlJob` in `App`, `useChatStream` in `ChatView`. A new crawl remounts `ChatView` (keyed by job id), so an old stream can never write into a new conversation.
 - **The API contract is assumed** (`src/api/types.ts`), because the backend source was not available. `httpClient.ts` is the only file that knows URLs, JSON field names and SSE event names, so reconciling with the real API is a change to that one file.
+- **One assumed extension to the contract:** `CrawlStatus.pages` (optional) lists crawled pages, which feed the sidebar list and the suggested questions. A backend that does not send it loses only those two features.
 - **Chat streams over `fetch`**, because `EventSource` cannot send a POST body. `sseParser.ts` rebuilds events split across network chunks, including a split `\r\n` and a split multi-byte character.
 - **Everything cancellable takes an `AbortSignal`:** Stop, Cancel crawl, a new crawl, unmount.
 
@@ -76,8 +77,9 @@ src/
   api/         types, client interface, httpClient, sseParser, mockClient (+ mockSearch, mockText)
   hooks/       useCrawlJob, useChatStream, useCrawlForm, useComposer, useAutoScroll, useFocusWhenLost
   state/       chatReducer
-  components/  CrawlPanel, BudgetPicker, ChatView, MessageList, Message, SourceList,
-               RefusalNotice, Composer, StatusBadge, Button, Icon
+  components/  CrawlPanel, BudgetPicker, PageList, ChatView, MessageList, Message, SourceList,
+               SuggestedQuestions, RefusalNotice, Composer, StatusBadge, Button, Icon
+  lib/         formatUrl, suggestQuestions
   styles/      tokens.css (from docs/DESIGN.md), global.css
   mocks/       site.json (20 pages captured from aibitsoft.com)
 e2e/           happy-path.spec.ts

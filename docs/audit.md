@@ -52,3 +52,12 @@ Format: `file:line — rule — fix | justification`. **Fix** means changed in t
 ## Passed without changes
 
 Icon-only buttons have `aria-label` (Send), and decorative icons are `aria-hidden`. Every control has a label. Heading order is h1 → h2. Focus uses `:focus-visible` everywhere and is never removed. There is no `transition: all`, reduced motion is honoured (the caret stops and durations go to 0), and `tabular-nums` is used for counts. Empty states render. There are no images, no `autoFocus`, no zoom lock, no paste blocking, and no `div` click handlers. Links are `<a>`. Controlled inputs are cheap per keystroke. `color-scheme: light` is declared.
+
+## After the audit: app-shell redesign
+
+The redesign added `PageList`, `SuggestedQuestions` and `lib/suggestQuestions.ts`, and restyled the shell, crawl panel, sources and composer. The new and changed files were checked against the same rules:
+- **Suggestions** are native `<button>`s in a labelled list. **Page and source links** are `<a>` with "(opens in a new tab)" hidden text.
+- **Long titles** truncate with an ellipsis (`min-width: 0` in place) or clamp to 2 lines.
+- **Hover states** are present, and only `transform` animates.
+- **Composer** — Never remove an outline without a replacement — the textarea's own outline is removed because the ring is drawn on the whole control via `:has(:focus-visible)`. That keeps keyboard-only behaviour, and the rule's "group focus for compound controls" pattern.
+- **Scroll containers** are `position: relative`, so visually hidden text cannot stretch the page (see `docs/verification.md`, bug 2).

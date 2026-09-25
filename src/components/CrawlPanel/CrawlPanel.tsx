@@ -39,7 +39,7 @@ export function CrawlPanel({ job, defaultUrl, onStart, onCancel, onReset, onRest
       ref={panelRef}
       tabIndex={-1}
       data-focus-fallback=""
-      className={`${styles.panel} ${done ? styles.collapsed : ''}`}
+      className={styles.panel}
       aria-labelledby="crawl-heading"
     >
       <h2 id="crawl-heading" className={done ? 'visually-hidden' : styles.heading}>

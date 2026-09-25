@@ -22,6 +22,10 @@ export function CrawlProgress({ job, onCancel }: CrawlProgressProps) {
         </span>
         …
       </p>
+      {/* The count is the accessible source of truth for the bar, so it never truncates. */}
+      <p className={styles.count}>
+        <span className={styles.crawled}>{crawled}</span> / {max} pages
+      </p>
       <div
         className={styles.track}
         role="progressbar"
@@ -33,16 +37,11 @@ export function CrawlProgress({ job, onCancel }: CrawlProgressProps) {
       >
         <div className={styles.fill} style={{ transform: `scaleX(${max ? crawled / max : 0})` }} />
       </div>
-      <p className={styles.meta}>
-        <span className={styles.count}>
-          {crawled} / {max} pages
-        </span>
-        {currentUrl && (
-          <span className={styles.currentUrl} title={currentUrl} translate="no">
-            {displayUrl(currentUrl)}
-          </span>
-        )}
-      </p>
+      {currentUrl && (
+        <p className={styles.currentUrl} title={currentUrl} translate="no">
+          {displayUrl(currentUrl)}
+        </p>
+      )}
       <Button onClick={onCancel} className={styles.cancel}>
         Cancel crawl
       </Button>

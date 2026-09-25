@@ -39,10 +39,11 @@ test('crawl, ask, get a sourced answer, offline, with a clean console', async ({
   await expect(page.getByRole('button', { name: 'Send' })).toBeVisible();
   await expect(page.getByText(/we craft iOS & Android apps/)).toBeVisible();
 
-  // Sources
-  await page.getByText('Sources (3)').click();
-  const sources = page.getByRole('link', { name: /opens in a new tab/ });
+  // Sources are shown open, as cards under the answer
+  const sources = page.getByRole('list', { name: 'Conversation' }).getByRole('link', { name: /opens in a new tab/ });
+  await expect(page.getByText('Sources (3)')).toBeVisible();
   await expect(sources).toHaveCount(3);
+  await expect(sources.first()).toBeVisible();
   await expect(sources.first()).toHaveAttribute('href', 'https://aibitsoft.com/?page=mobile-experiences');
 
   // A follow-up grows the conversation past the viewport. On desktop only the conversation

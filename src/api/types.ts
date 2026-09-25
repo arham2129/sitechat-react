@@ -7,12 +7,19 @@ export const CRAWL_BUDGETS: readonly CrawlBudget[] = [20, 60, 120];
 
 export type CrawlState = 'running' | 'done' | 'cancelled' | 'error';
 
+export interface CrawledPage {
+  title: string;
+  url: string;
+}
+
 export interface CrawlStatus {
   status: CrawlState;
   pages_crawled: number;
   max_pages: CrawlBudget;
   current_url?: string;
   error?: string;
+  /** Assumed optional: pages crawled so far. Without it the page list and suggestions are hidden. */
+  pages?: CrawledPage[];
 }
 
 export interface Source {

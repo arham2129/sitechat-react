@@ -7,12 +7,12 @@ Run `npm run dev` (mock mode) and open `http://localhost:5173` at desktop width,
 | Time | Do | Say |
 |---|---|---|
 | 0:00–0:20 | Show the header badge "Demo data". | "SiteChat crawls a site and answers questions only from its pages. This is mock mode: the same UI, over 20 pages I captured from aibitsoft.com, so it runs offline. With one environment variable it talks to the FastAPI backend instead." |
-| 0:20–0:50 | Change the URL to `ftp://aibitsoft.com` and press Enter. Fix it, arrow to 60 pages, then Start crawl. | "Validation uses `new URL()`, http and https only, and focus goes to the field so a screen reader reads the error. The page budget is a real radio group. Progress is polled once a second, and the page count never truncates, even on a phone." |
-| 0:50–1:30 | Ask "Do you use React?", then "Do you build mobile apps?". Press Stop within about 2 seconds of sending the second, ask it again, and open Sources. | "It streams over fetch, because EventSource can't POST. Stop aborts the request itself and keeps the partial answer. Every sentence is copied word for word from a crawled page, and here are the sources." |
+| 0:20–0:50 | Change the URL to `ftp://aibitsoft.com` and press Enter. Fix it, arrow to 60 pages, then Start crawl. | "Validation uses `new URL()`, http and https only, and focus goes to the field so a screen reader reads the error. The page budget is a real radio group. Progress is polled once a second, and the crawled pages fill the sidebar as they're read. It stops at 20 because that's all the site has." |
+| 0:50–1:30 | Click the suggestion "Tell me about Mobile Experiences". Then type "Do you use React?", press Stop within about 2 seconds, and ask it again. | "Suggestions are built from crawled page titles, so each one is answerable. It streams over fetch, because EventSource can't POST. Stop aborts the request itself and keeps the partial answer. Every sentence is copied word for word from a crawled page, and the source cards link back to it." |
 | 1:30–1:55 | Ask "Who founded it?". | "The pages don't say, so it refuses. That's a calm information state, not an error, and it offers the contact details it found on the site." |
-| 1:55–2:20 | Switch DevTools to 360 px. | "On a phone it's one column, and after the crawl the panel collapses into a sticky bar. The composer stays pinned above the keyboard." |
+| 1:55–2:20 | Switch DevTools to 360 px. | "On a phone it's one column. After the crawl, the site summary stays pinned at the top and the composer at the bottom." |
 | 2:20–2:45 | Open `/?simulate=chat-error`, crawl, ask, then Retry. | "This is the network-error state. Retry re-sends the last question without duplicating it in the transcript." |
-| 2:45–3:00 | Open `src/api/httpClient.ts`. | "The backend contract is assumed, so this is the one file that knows it. There are 52 unit tests, an end-to-end test that also proves the demo needs no internet, and an accessibility audit in `docs/audit.md`." |
+| 2:45–3:00 | Open `src/api/httpClient.ts`. | "The backend contract is assumed, so this is the one file that knows it. There are 55 unit tests, an end-to-end test that also proves the demo needs no internet, and an accessibility audit in `docs/audit.md`." |
 
 ## Questions to ask live
 
@@ -71,10 +71,10 @@ Answers are sentences copied word for word from aibitsoft.com, so they are the c
    The budget picker is a radio group with arrow keys. Answers are `aria-live` with `aria-busy` while streaming, so they're read once, not token by token. Focus is moved when a focused button disappears, contrast was measured (AA), and reduced motion is honoured. The whole flow was verified keyboard-only.
 
 8. **How is it responsive?**
-   From 768 px it's a CSS grid: crawl panel left, chat right, and only the conversation scrolls. Below that it's one column, with a sticky crawl bar and composer. The e2e test found that a long chat pushed the composer off-screen (a flex-basis bug), and now asserts it can't.
+   From 768 px it's an app shell: a CSS grid with a sidebar and the chat, where only the sidebar and the conversation scroll, never the page. Below that it's one column, with a pinned site bar and composer. The e2e test has caught two page-scroll bugs (a flex basis, and absolutely positioned screen-reader text escaping its scroll box) and now asserts neither can come back.
 
 9. **How did you test it?**
-   52 Vitest tests: the reducer (every action), the SSE parser edge cases, the mock refusal threshold, hook races, and the Composer, RefusalNotice and BudgetPicker. One Playwright happy path also asserts no page scroll on desktop, no requests leaving localhost, and a clean console. Each invariant was proven to fail when its fix is removed.
+   55 Vitest tests: the reducer (every action), the SSE parser edge cases, the mock refusal threshold, the suggested questions (each must be answerable), hook races, and the Composer, RefusalNotice and BudgetPicker. One Playwright happy path also asserts no page scroll on desktop, no requests leaving localhost, and a clean console. Each invariant was proven to fail when its fix is removed.
 
 10. **What are the limits, and what would you do next?**
     The mock's keyword matching misses synonyms ("hiring" vs "careers"), and the API contract hasn't been verified against the real FastAPI service. Next steps: reconcile `httpClient.ts` with the backend, then add persistence, and virtualise long conversations if sessions grow.

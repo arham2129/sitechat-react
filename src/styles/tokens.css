@@ -49,16 +49,17 @@
   --control-height: 2.5rem;
   --touch-target: 2.75rem;
   --header-height: 3.5rem;
-  --crawl-pane-width: 20rem;
-  --container-max: 80rem;
+  --sidebar-width: 20rem;
+  /* Reading width of the chat column: answers stay near 65 characters per line. */
+  --chat-max: 46rem;
 
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-full: 999px;
 
-  /* Only for the sticky summary bar at 360px, where it separates the bar from scrolling content. */
-  --shadow-sticky: 0 1px 2px rgb(30 41 59 / 0.08);
+  /* For layers that float over scrolling content: the sticky bar on phones and the composer. */
+  --shadow-float: 0 1px 2px rgb(30 41 59 / 0.06), 0 4px 16px rgb(30 41 59 / 0.06);
 
   --duration-fast: 120ms;
   --duration-base: 200ms;
@@ -70,7 +71,7 @@
 
 @media (min-width: 80rem) {
   :root {
-    --crawl-pane-width: 22.5rem;
+    --sidebar-width: 22.5rem;
   }
 }
 

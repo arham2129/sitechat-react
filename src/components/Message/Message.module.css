@@ -8,7 +8,14 @@
 
 .assistant {
   align-self: stretch;
-  max-width: 65ch;
+}
+
+.author {
+  margin: 0 0 var(--space-1);
+  color: var(--color-slate);
+  font-size: var(--text-xs);
+  line-height: var(--leading-xs);
+  font-weight: var(--weight-semibold);
 }
 
 .text {

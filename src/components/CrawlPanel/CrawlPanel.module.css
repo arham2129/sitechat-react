@@ -1,19 +1,15 @@
+/* No card: the sidebar is the container, so the panel is just a section of it. */
 .panel {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
-  padding: var(--space-5);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg);
-  background: var(--color-paper);
+  gap: var(--space-4);
 }
 
 .heading {
   margin: 0;
-  font-size: var(--text-lg);
-  line-height: var(--leading-lg);
+  font-size: var(--text-md);
+  line-height: var(--leading-md);
   font-weight: var(--weight-semibold);
-  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
@@ -23,6 +19,9 @@
   align-items: flex-start;
   gap: var(--space-1);
   margin: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-canvas);
   font-size: var(--text-sm);
   line-height: var(--leading-sm);
   color: var(--color-slate);
@@ -36,7 +35,7 @@
   display: flex;
   gap: var(--space-2);
   padding: var(--space-3);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   background: var(--color-danger-tint);
   color: var(--color-danger);
   font-size: var(--text-sm);
@@ -50,19 +49,4 @@
 
 .noticeIcon {
   flex: none;
-}
-
-@media (max-width: 47.99rem) {
-  .panel {
-    padding: var(--space-4);
-  }
-
-  /* After the crawl the panel shrinks to a one-line bar that stays in reach while the chat scrolls. */
-  .collapsed {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    padding: var(--space-2) var(--space-3);
-    box-shadow: var(--shadow-sticky);
-  }
 }

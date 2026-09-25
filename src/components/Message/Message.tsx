@@ -25,36 +25,43 @@ export function Message({ message, error, onRetry }: MessageProps) {
   const waiting = streaming && message.text === '' && !message.refusal;
 
   return (
-    // aria-busy holds screen-reader announcements until the answer finishes, so the
-    // live region reads it once instead of token by token.
-    <div className={styles.assistant} aria-live="polite" aria-busy={streaming}>
-      {waiting && (
-        <p className={styles.waiting}>
-          <span className={styles.skeleton} aria-hidden="true" />
-          Searching the crawled pages…
-        </p>
-      )}
-      {message.text && (
-        <p className={styles.text}>
-          {message.text}
-          {streaming && <span className={styles.caret} aria-hidden="true" />}
-        </p>
-      )}
-      {message.refusal && <RefusalNotice reason={message.refusal.reason} contact={message.refusal.contact} />}
-      {message.state === 'stopped' && <p className={styles.note}>Stopped before the answer finished.</p>}
-      {message.state === 'error' && (
-        <div className={styles.error} role="alert">
-          <Icon name="alert" className={styles.errorIcon} />
-          <p className={styles.errorText}>{error ? `No answer: ${error}. Check your connection, then retry.` : 'This answer failed.'}</p>
-          {onRetry && (
-            <Button onClick={onRetry} className={styles.retry}>
-              <Icon name="retry" />
-              Retry
-            </Button>
-          )}
-        </div>
-      )}
-      {message.state === 'complete' && <SourceList sources={message.sources} />}
+    <div className={styles.assistant}>
+      <p className={styles.author} translate="no">
+        SiteChat
+      </p>
+      {/* aria-busy holds screen-reader announcements until the answer finishes, so the
+          live region reads it once instead of token by token. */}
+      <div aria-live="polite" aria-busy={streaming}>
+        {waiting && (
+          <p className={styles.waiting}>
+            <span className={styles.skeleton} aria-hidden="true" />
+            Searching the crawled pages…
+          </p>
+        )}
+        {message.text && (
+          <p className={styles.text}>
+            {message.text}
+            {streaming && <span className={styles.caret} aria-hidden="true" />}
+          </p>
+        )}
+        {message.refusal && <RefusalNotice reason={message.refusal.reason} contact={message.refusal.contact} />}
+        {message.state === 'stopped' && <p className={styles.note}>Stopped before the answer finished.</p>}
+        {message.state === 'error' && (
+          <div className={styles.error} role="alert">
+            <Icon name="alert" className={styles.errorIcon} />
+            <p className={styles.errorText}>
+              {error ? `No answer: ${error}. Check your connection, then retry.` : 'This answer failed.'}
+            </p>
+            {onRetry && (
+              <Button onClick={onRetry} className={styles.retry}>
+                <Icon name="retry" />
+                Retry
+              </Button>
+            )}
+          </div>
+        )}
+        {message.state === 'complete' && <SourceList sources={message.sources} />}
+      </div>
     </div>
   );
 }
