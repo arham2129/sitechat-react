@@ -29,10 +29,35 @@ Observations relevant to SiteChat's design (not adopted wholesale):
 - The site's UI blue (`#2B4DDF`) differs from the logo blue (`#0A5797`).
 - The site leans on gradients (`.hero-bg`, `.btn-primary`, `.text-gradient`), hover lift (`translateY(-5px)`), and pill buttons — all on the brief's banned list for SiteChat.
 
-## Computed styles and screenshots
+## Screenshots
 
-Pending: see "Blocked" below.
+- `home-1280.png`: viewport at 1280×800.
+- `home-360.png`: viewport at 360×780.
 
-## Blocked
+## Computed styles
 
-The site styles itself at runtime with the Tailwind Play CDN (`https://cdn.tailwindcss.com`). This environment's network policy denies that host, so the page renders unstyled and computed colours for headings, body text and buttons would be browser defaults, not the brand.
+Read with `getComputedStyle` at 1280 px (hero section and header of `/`). Hex values are conversions of the reported `rgb()`.
+
+| Element | Colour | Background | Font | Size / weight / line-height | Radius | Border |
+|---|---|---|---|---|---|---|
+| Logo | PNG: `#0A5797` + `#49B04F` | — | — | image, height 32 px (`lg:h-8`) | — | — |
+| Body | `#000000` | `#F9FAFB` | Inter | 16 / 400 / 24 px | — | — |
+| Nav link ("Build") | `#4B5563` | — | Inter | 16 / 500 / 24 px | — | — |
+| H1 text | `#1E293B` | — | Inter | 60 / 900 / 60 px (24 px at 360) | — | — |
+| H1 accent word ("Solutions") | `#1D4ED8` | — | Inter | 60 / 900 | — | — |
+| Eyebrow badge ("AI POWERED SOLUTION") | `#1D4ED8` | `rgba(219,234,254,.8)` | Inter | 14 / 500, uppercase | 9999 px | 1 px `rgba(191,219,254,.5)` |
+| Hero paragraph | `#475569` | — | Inter | 18 / 400 / 28 px (14 px at 360) | — | — |
+| H2 (first) | `#1F2937` | — | Inter | 20 / 700 / 36 px | — | — |
+| Button, primary ("Get Started Today") | `#FFFFFF` | `#1D4ED8` | Inter | 18 / 700 / 28 px | 16 px | — |
+| Button, secondary ("Book Expert Call") | `#1D4ED8` | `rgba(255,255,255,.8)` | Inter | 18 / 700 / 28 px | 16 px | 2 px `#BFDBFE` |
+| Nav button, solid ("Get Proposal") | `#FFFFFF` | gradient `#1D4ED8 → #2563EB` | Inter | 16 / 500 / 24 px | 9999 px | — |
+| Nav button, outline ("Book Expert") | `#2B4DDF` | `#FFFFFF` | Inter | 16 / 500 / 24 px | 9999 px | 2 px `#2B4DDF` |
+
+Font family on every element: `Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`.
+
+## Takeaways for SiteChat's DESIGN.md
+
+- Brand blue is the logo blue `#0A5797` (decision: the logo is the brand mark). The site's UI blues (`#1D4ED8`, `#2B4DDF`) are Tailwind defaults and a declared token, not the mark.
+- Brand green is the logo green `#49B04F`; the site UI does not use it outside the logo.
+- Inter is the brand face; neutrals are Tailwind slate/gray (`#1E293B`, `#475569`, `#4B5563`, `#F9FAFB`).
+- Not carried over, per the brief's bans: gradient buttons and hero wash, the one accented word in the H1, the all-caps eyebrow badge, `→` in button text, pill radius on every button.

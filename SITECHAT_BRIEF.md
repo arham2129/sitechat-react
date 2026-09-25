@@ -75,13 +75,21 @@ interface CrawlStatus {
 
 ### Mock data must be real, not invented
 
-In Phase 1, use `playwright-cli` to visit aibitsoft.com and save up to 20 pages as `src/mocks/site.json` (`{ title, url, text }`, text trimmed to 1,500 chars).
+In Phase 1, use `playwright-cli` to visit aibitsoft.com and save up to 20 pages to `src/mocks/site.json`, shaped as:
+
+```ts
+{
+  source: string; capturedAt: string;
+  contact: { email?: string; phone?: string; url?: string };  // taken from the site's mailto:/tel: links
+  pages: { title: string; url: string; text: string }[];      // text trimmed to 1,500 chars
+}
+```
 
 The mock client:
 - answers by naive keyword overlap over those pages;
 - streams a short answer made **only of sentences copied from the best-matching page**;
 - returns up to 3 of those pages as sources;
-- refuses when the best score is below a threshold, returning contact details found on the site.
+- refuses when the best score is below a threshold, returning the site-level `contact` block (not per-page data).
 
 Never fabricate facts about AiBit Soft.
 
@@ -152,7 +160,6 @@ docs/         DESIGN.md DECISIONS.md audit.md screenshots/ brand-capture/
 
 ### Phase 2 — Design system (skill: `design-taste-frontend`)
 
-- Write `docs/DESIGN.md` by hand (no skill covers this format as an installable skill — `VoltAgent/awesome-claude-design` is README-only). Do not adopt another brand's look (no Stripe, Linear or Vercel clones) — derive it from AiBit Soft's own site captured in Phase 1.
 - Write `docs/DESIGN.md` for SiteChat, derived from the Phase 1 capture:
   - 4–6 named colour tokens (AiBit's blue and green as accents, not everywhere);
   - type scale;
