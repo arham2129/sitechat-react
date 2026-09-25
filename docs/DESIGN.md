@@ -110,7 +110,7 @@ One shadow, `0 1px 2px rgb(30 41 59 / 0.08)` (tinted with `ink`), and only on th
 
 - **Header** (56 px): the "SiteChat" wordmark in `text-xl` `ink` and the status badge. AiBit's logo is not used, because SiteChat is not an AiBit product.
 - **768 px and wider**: two panes in a grid. The crawl pane is 320 px wide at 768 px and 360 px at 1280 px, and chat takes the rest. The container is at most 1280 px wide with 24 px gutters. Chat fills the viewport height (`100dvh` minus the header), the message list scrolls, and the composer stays at the bottom.
-- **360 px**: one column with 16 px gutters. Before the crawl finishes, the crawl panel sits above chat. Once it is done, it collapses into a sticky summary bar showing the host, the page count and a "Change site" button.
+- **360 px**: one column with 16 px gutters. Before the crawl finishes, the crawl panel sits above chat. Once it is done, it collapses into a sticky summary bar showing the host, the page count and a "Change site" button. The host truncates first; the page count and button never do.
 
 ## Components
 
@@ -119,7 +119,7 @@ One shadow, `0 1px 2px rgb(30 41 59 / 0.08)` (tinted with `ink`), and only on th
 | **Button** | Primary: `aibit-blue` fill, white `text-sm`/600, `radius-md`, 40 px tall. Secondary: `paper` with a `control-border` border and `ink` text. Text button: no border, `aibit-blue` text. Disabled: `canvas` fill, `slate` text, `not-allowed` cursor. Pressed: `translateY(1px)`. Labels have at most 3 words and no arrow glyphs. |
 | **Text input** | Label above, helper below, then the error below that. `control-border`, `radius-md`, `text-md`. Invalid state: `danger` border and message, with `aria-invalid` and `aria-describedby`. Placeholder text is never the label. |
 | **BudgetPicker** | A segmented control with `role="radiogroup"`. Three equal segments (20, 60, 120 pages) sit in one `control-border` frame. The selected segment is an `aibit-blue` fill with white text. Arrow keys move the selection and Tab enters and leaves the group. |
-| **Crawl progress** | A 6 px `radius-sm` track in `line` with an `aibit-green` fill (2.2:1 against the track, so the text count below it carries the information; the bar is supplementary). Below it: `12 / 60 pages` in tabular numbers, then the current URL in `slate`, truncated in the middle with an ellipsis. The Cancel button is secondary. |
+| **Crawl progress** | A 6 px `radius-sm` track in `line` with an `aibit-green` fill (2.2:1 against the track, so the text count below it carries the information; the bar is supplementary). Below it: `12 / 60 pages` in tabular numbers, then the current URL in `slate`, truncated in the middle with an ellipsis. The count never wraps, truncates or hides at any width, including 360 px; only the URL gives way. The Cancel button is secondary. |
 | **StatusBadge** | `radius-full`, `text-xs`/500. Demo data: `slate` on `canvas` with a `line` border. Live: `green-ink` on `paper` with a `line` border. |
 | **Message (user)** | `blue-tint` block, `radius-lg`, `ink` text, right-aligned, at most 80% of the width. |
 | **Message (answer)** | On `paper` with no fill and left-aligned, with text limited to 65 characters per line. A caret shows while the answer is streaming. |
