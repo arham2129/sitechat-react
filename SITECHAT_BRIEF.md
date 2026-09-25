@@ -12,8 +12,8 @@ Work in the phases below. **At the end of every phase: stop, summarise what chan
    - `design-taste-frontend` (taste-skill, Leonxlnx/taste-skill)
    - `web-design-guidelines` (vercel-labs/agent-skills)
    - `playwright-cli` (microsoft/playwright-cli), and the `playwright-cli` binary is on PATH
-   - `awesome-claude-design` (VoltAgent/awesome-claude-design — confirm exact skill name from `npx skills add VoltAgent/awesome-claude-design --list`)
-2. Node >= 18. `git init` if needed. First commit: this brief only.
+   - `awesome-claude-design` (VoltAgent/awesome-claude-design — README-only reference for the DESIGN.md format; no installable skill. Write `docs/DESIGN.md` by hand instead.)
+2. Node >= 18. `git init` if needed.
 
 ---
 
@@ -150,9 +150,9 @@ docs/         DESIGN.md DECISIONS.md audit.md screenshots/ brand-capture/
 - Record the computed colours and font families of the logo, headings, body text and buttons.
 - Build `src/mocks/site.json` as specified above.
 
-### Phase 2 — Design system (skills: `awesome-claude-design`, then `design-taste-frontend`)
+### Phase 2 — Design system (skill: `design-taste-frontend`)
 
-- Use the awesome-claude-design skill for the **DESIGN.md format only**. Do not adopt another brand's look from its 68 templates (no Stripe, Linear or Vercel clones) — write AiBit Soft's own DESIGN.md from the Phase 1 capture.
+- Write `docs/DESIGN.md` by hand (no skill covers this format as an installable skill — `VoltAgent/awesome-claude-design` is README-only). Do not adopt another brand's look (no Stripe, Linear or Vercel clones) — derive it from AiBit Soft's own site captured in Phase 1.
 - Write `docs/DESIGN.md` for SiteChat, derived from the Phase 1 capture:
   - 4–6 named colour tokens (AiBit's blue and green as accents, not everywhere);
   - type scale;
