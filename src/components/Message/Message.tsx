@@ -31,7 +31,7 @@ export function Message({ message, error, onRetry }: MessageProps) {
       {waiting && (
         <p className={styles.waiting}>
           <span className={styles.skeleton} aria-hidden="true" />
-          Searching the crawled pages
+          Searching the crawled pages…
         </p>
       )}
       {message.text && (
@@ -45,7 +45,7 @@ export function Message({ message, error, onRetry }: MessageProps) {
       {message.state === 'error' && (
         <div className={styles.error} role="alert">
           <Icon name="alert" className={styles.errorIcon} />
-          <p className={styles.errorText}>{error ? `No answer: ${error}.` : 'This answer failed.'}</p>
+          <p className={styles.errorText}>{error ? `No answer: ${error}. Check your connection, then retry.` : 'This answer failed.'}</p>
           {onRetry && (
             <Button onClick={onRetry} className={styles.retry}>
               <Icon name="retry" />

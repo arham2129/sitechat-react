@@ -58,6 +58,25 @@ describe('useCrawlJob', () => {
     expect(signal?.aborted).toBe(true);
   });
 
+  it('Change site keeps the finished crawl restorable until a new crawl starts', async () => {
+    const client = fakeClient({
+      startCrawl: vi.fn().mockResolvedValueOnce('job-1').mockResolvedValueOnce('job-2'),
+      getCrawlStatus: vi.fn(async () => ({ status: 'done' as const, pages_crawled: 20, max_pages: 20 as const })),
+    });
+    const { result } = renderHook(() => useCrawlJob(client, POLL));
+
+    await act(() => result.current.start('https://aibitsoft.com', 20));
+    act(() => result.current.reset());
+    expect(result.current.job).toMatchObject({ phase: 'idle', previous: { jobId: 'job-1' } });
+
+    act(() => result.current.restore());
+    expect(result.current.job).toMatchObject({ phase: 'done', jobId: 'job-1' });
+
+    act(() => result.current.reset());
+    await act(() => result.current.start('https://example.com', 20));
+    expect(result.current.job).toMatchObject({ jobId: 'job-2', previous: null });
+  });
+
   it('reports a failed start as an error', async () => {
     const client = fakeClient({ startCrawl: vi.fn().mockRejectedValue(new Error('Server down')) });
     const { result } = renderHook(() => useCrawlJob(client, POLL));

@@ -24,7 +24,7 @@ interface Job {
 }
 
 const DEMO_HOST = 'aibitsoft.com';
-const REFUSAL_REASON = "I couldn't find an answer to that on the crawled pages.";
+const REFUSAL_REASON = 'The crawled pages don\u2019t cover this question.';
 
 export function createMockClient(options: MockOptions = {}): SiteChatClient {
   const { tickMs = 150, tokenMs = 25 } = options;

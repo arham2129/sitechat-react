@@ -14,9 +14,19 @@ export interface CrawlJob {
   jobId: string | null;
   status: CrawlStatus | null;
   error: string | null;
+  /** The finished crawl that "Change site" left, kept so it can be restored until a new crawl starts. */
+  previous: CrawlJob | null;
 }
 
-const IDLE: CrawlJob = { phase: 'idle', url: null, budget: null, jobId: null, status: null, error: null };
+const IDLE: CrawlJob = {
+  phase: 'idle',
+  url: null,
+  budget: null,
+  jobId: null,
+  status: null,
+  error: null,
+  previous: null,
+};
 
 function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : 'Something went wrong';
@@ -79,9 +89,17 @@ export function useCrawlJob(client: SiteChatClient, { pollIntervalMs = POLL_INTE
 
   const reset = useCallback(() => {
     stopPolling();
-    // Keep the last address and budget so the form reopens ready to edit, not blank.
-    setJob((prev) => ({ ...IDLE, url: prev.url, budget: prev.budget }));
+    // Keep the last address and budget so the form reopens ready to edit, and keep a
+    // finished crawl so "Change site" is undoable until a new crawl actually starts.
+    setJob((prev) => ({
+      ...IDLE,
+      url: prev.url,
+      budget: prev.budget,
+      previous: prev.phase === 'done' ? prev : prev.previous,
+    }));
   }, [stopPolling]);
 
-  return { job, start, cancel, reset };
+  const restore = useCallback(() => setJob((prev) => prev.previous ?? prev), []);
+
+  return { job, start, cancel, reset, restore };
 }

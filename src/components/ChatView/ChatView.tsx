@@ -45,7 +45,7 @@ export function ChatView({ client, job }: ChatViewProps) {
       <Composer
         enabled={ready}
         isStreaming={chat.isStreaming}
-        placeholder={ready ? `Ask about ${host}` : 'Crawl a site first'}
+        placeholder={ready ? `Ask about ${host}…` : 'Start a crawl first…'}
         onSend={chat.ask}
         onStop={chat.stop}
       />

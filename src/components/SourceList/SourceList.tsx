@@ -24,7 +24,9 @@ export function SourceList({ sources }: SourceListProps) {
               {source.title}
               <span className="visually-hidden"> (opens in a new tab)</span>
             </a>
-            <span className={styles.host}>{hostOf(source.url)}</span>
+            <span className={styles.host} translate="no">
+              {hostOf(source.url)}
+            </span>
           </li>
         ))}
       </ul>

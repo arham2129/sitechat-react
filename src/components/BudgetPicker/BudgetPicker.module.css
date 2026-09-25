@@ -19,7 +19,6 @@
   font-weight: var(--weight-semibold);
   font-variant-numeric: tabular-nums;
   cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-out);
 }
 
 .option:hover:not(:disabled, [aria-checked='true']) {

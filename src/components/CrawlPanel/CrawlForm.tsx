@@ -11,30 +11,32 @@ interface CrawlFormProps {
 }
 
 export function CrawlForm({ onStart, initialUrl, initialBudget }: CrawlFormProps) {
-  const form = useCrawlForm(onStart, initialUrl, initialBudget);
+  const { url, setUrl, budget, setBudget, error, submit, inputRef } = useCrawlForm(onStart, initialUrl, initialBudget);
   const errorId = 'crawl-url-error';
 
   return (
-    <form className={styles.form} onSubmit={form.submit} noValidate>
+    <form className={styles.form} onSubmit={submit} noValidate>
       <div className={styles.field}>
         <label className={styles.label} htmlFor="crawl-url">
           Website address
         </label>
         <input
+          ref={inputRef}
           id="crawl-url"
+          name="url"
           className={styles.input}
           type="url"
           inputMode="url"
           autoComplete="url"
           spellCheck={false}
-          value={form.url}
-          onChange={(event) => form.setUrl(event.target.value)}
-          aria-invalid={form.error !== null}
-          aria-describedby={form.error ? errorId : 'crawl-url-hint'}
+          value={url}
+          onChange={(event) => setUrl(event.target.value)}
+          aria-invalid={error !== null}
+          aria-describedby={error ? errorId : 'crawl-url-hint'}
         />
-        {form.error ? (
+        {error ? (
           <p id={errorId} className={styles.error}>
-            {form.error}
+            {error}
           </p>
         ) : (
           <p id="crawl-url-hint" className={styles.hint}>
@@ -47,7 +49,7 @@ export function CrawlForm({ onStart, initialUrl, initialBudget }: CrawlFormProps
         <span id="budget-label" className={styles.label}>
           Pages to crawl
         </span>
-        <BudgetPicker value={form.budget} onChange={form.setBudget} labelledBy="budget-label" />
+        <BudgetPicker value={budget} onChange={setBudget} labelledBy="budget-label" />
       </div>
 
       <Button type="submit" variant="primary">

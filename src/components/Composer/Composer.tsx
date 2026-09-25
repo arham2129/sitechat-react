@@ -28,6 +28,8 @@ export function Composer({ enabled, isStreaming, placeholder, onSend, onStop }: 
         <textarea
           ref={inputRef}
           id="composer-input"
+          name="question"
+          autoComplete="off"
           className={styles.input}
           rows={1}
           value={value}
@@ -57,7 +59,7 @@ export function Composer({ enabled, isStreaming, placeholder, onSend, onStop }: 
         )}
       </div>
       <p id="composer-hint" className={styles.hint}>
-        {enabled ? 'Enter to send, Shift + Enter for a new line.' : 'Questions unlock when the crawl finishes.'}
+        {enabled ? 'Enter to send, Shift\u00A0+\u00A0Enter for a new line.' : 'Questions unlock when the crawl finishes.'}
       </p>
     </form>
   );

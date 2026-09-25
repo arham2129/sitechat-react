@@ -49,3 +49,7 @@
   text-underline-offset: 3px;
   overflow-wrap: anywhere;
 }
+
+.link:hover {
+  text-decoration-thickness: 2px;
+}

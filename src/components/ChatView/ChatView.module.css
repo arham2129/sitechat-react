@@ -29,6 +29,7 @@
   line-height: var(--leading-xl);
   font-weight: var(--weight-bold);
   letter-spacing: -0.015em;
+  text-wrap: balance;
 }
 
 .emptyText {

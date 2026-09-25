@@ -95,7 +95,7 @@ One shadow, `0 1px 2px rgb(30 41 59 / 0.08)` (tinted with `ink`), and only on th
 
 | Token | Value | Use |
 |---|---|---|
-| `duration-fast` | 120 ms | Hover and active colour changes, button press |
+| `duration-fast` | 120 ms | Button press (`translateY(1px)`); hover colour changes are instant |
 | `duration-base` | 200 ms | Progress fill (`transform: scaleX`), source list reveal (opacity) |
 | `ease-out` | `cubic-bezier(0.2, 0, 0, 1)` | All of the above |
 

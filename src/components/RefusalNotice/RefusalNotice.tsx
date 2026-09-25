@@ -27,7 +27,7 @@ export function RefusalNotice({ reason, contact }: RefusalNoticeProps) {
             <ul className={styles.links}>
               {links.map((link) => (
                 <li key={link.href}>
-                  <a className={styles.link} href={link.href}>
+                  <a className={styles.link} href={link.href} translate="no">
                     {link.label}
                   </a>
                 </li>

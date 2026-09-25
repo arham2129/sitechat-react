@@ -17,7 +17,10 @@ export function CrawlProgress({ job, onCancel }: CrawlProgressProps) {
     <div className={styles.progress}>
       <p className={styles.title}>
         {job.phase === 'starting' ? 'Starting crawl of ' : 'Crawling '}
-        <span className={styles.host}>{job.url ? hostOf(job.url) : ''}</span>
+        <span className={styles.host} translate="no">
+          {job.url ? hostOf(job.url) : ''}
+        </span>
+        …
       </p>
       <div
         className={styles.track}
@@ -35,13 +38,13 @@ export function CrawlProgress({ job, onCancel }: CrawlProgressProps) {
           {crawled} / {max} pages
         </span>
         {currentUrl && (
-          <span className={styles.currentUrl} title={currentUrl}>
+          <span className={styles.currentUrl} title={currentUrl} translate="no">
             {displayUrl(currentUrl)}
           </span>
         )}
       </p>
       <Button onClick={onCancel} className={styles.cancel}>
-        Cancel
+        Cancel crawl
       </Button>
     </div>
   );

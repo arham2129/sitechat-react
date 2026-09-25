@@ -1,10 +1,11 @@
-/* Self-hosted so the offline demo renders in Inter, not a fallback (DESIGN.md, Typography). */
+/* Self-hosted so the offline demo renders in Inter, not a fallback (DESIGN.md, Typography).
+   Served from public/ at a fixed path so index.html can preload it. */
 @font-face {
   font-family: 'Inter';
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: url('../assets/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+  src: url('/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
 }
 
 *,
@@ -16,6 +17,8 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* A tint of the brand blue instead of the default grey flash on tap. */
+  -webkit-tap-highlight-color: rgb(10 87 151 / 0.12);
 }
 
 body {
@@ -33,6 +36,15 @@ button,
 input,
 textarea {
   font: inherit;
+}
+
+/* Removes the double-tap-to-zoom delay on controls; pinch zoom still works. */
+a,
+button,
+input,
+textarea,
+summary {
+  touch-action: manipulation;
 }
 
 a {
@@ -55,6 +67,15 @@ a {
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
+}
+
+@media (max-width: 47.99rem) {
+  /* The sticky crawl bar (top) and composer (bottom) must not cover whatever
+     keyboard focus scrolls into view. */
+  html {
+    scroll-padding-top: 5rem;
+    scroll-padding-bottom: 8rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

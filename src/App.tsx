@@ -17,7 +17,9 @@ export function App() {
     <div className={styles.app}>
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          <h1 className={styles.wordmark}>SiteChat</h1>
+          <h1 className={styles.wordmark} translate="no">
+            SiteChat
+          </h1>
           <StatusBadge mode={client.mode} />
         </div>
       </header>
@@ -28,9 +30,11 @@ export function App() {
           onStart={crawl.start}
           onCancel={crawl.cancel}
           onReset={crawl.reset}
+          onRestore={crawl.restore}
         />
-        {/* A new crawl remounts the chat, so an old conversation or stream can never leak into it. */}
-        <ChatView key={crawl.job.jobId ?? 'no-job'} client={client} job={crawl.job} />
+        {/* A new crawl remounts the chat, so an old conversation or stream can never leak into
+            it; "Change site" alone keeps the key, so the conversation survives until then. */}
+        <ChatView key={crawl.job.jobId ?? crawl.job.previous?.jobId ?? 'no-job'} client={client} job={crawl.job} />
       </main>
     </div>
   );

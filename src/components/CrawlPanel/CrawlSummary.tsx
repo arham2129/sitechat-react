@@ -16,7 +16,7 @@ export function CrawlSummary({ job, onReset }: CrawlSummaryProps) {
   return (
     <div className={styles.summary}>
       <div className={styles.info}>
-        <p className={styles.host} title={host}>
+        <p className={styles.host} title={host} translate="no">
           {host}
         </p>
         <p className={styles.meta}>
